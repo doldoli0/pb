@@ -1,0 +1,52 @@
+//opencv 경로
+pkg-config --cflags opencv4
+
+//opencv4nodejs 설치시 경로추가
+CPLUS_INCLUDE_PATH=/opt/homebrew/opt/opencv/include/opencv4 npm install opencv4nodejs
+
+
+/opt/homebrew/opt/opencv/include/opencv4
+//환경변수 라이브러리 경로 추가
+export LD_LIBRARY_PATH=/opt/homebrew/opt/opencv/lib:$LD_LIBRARY_PATH
+
+//환경변수
+export OPENCV4NODEJS_DISABLE_AUTOBUILD=1
+export OPENCV_LIB_DIR="/opt/homebrew/Cellar/opencv/4.7.0_2/lib"
+export OPENCV_INCLUDE_DIR="/opt/homebrew/Cellar/opencv/4.7.0_2/include"
+export PKG_CONFIG_PATH="/opt/homebrew/Cellar/opencv/4.7.0_2/lib/pkgconfig"
+
+
+//electron-rebuild
+CPLUS_INCLUDE_PATH=/opt/homebrew/opt/opencv/include/opencv4 ./node_modules/.bin/electron-rebuild
+
+//node_module/opencv4nodejs/binding.gyp 수정
+"include_dirs" : [
+    "<!@(node ./install/parseEnv.js OPENCV4NODEJS_INCLUDES)",
+    "cc",
+    "cc/core",
+    "<!(node -e \"require('nan')\")",
+    "<!(node -e \"require('native-node-utils')\")",
+    "/opt/homebrew/opt/opencv/include/opencv4"
+],
+
+
+
+//gyp 수정 해봤음
+"include_dirs" : [
+			"<!@(node ./install/parseEnv.js OPENCV4NODEJS_INCLUDES)",
+			"cc",
+			"cc/core",
+			"<!(node -e \"require('nan')\")",
+			"<!(node -e \"require('native-node-utils')\")",
+			"/usr/local/opt/opencv/include/opencv4"
+		],
+		"library_dirs": [
+            "/usr/local/opt/opencv/lib"
+        ],
+		"libraries": [
+			"<!@(node ./install/parseEnv.js OPENCV4NODEJS_LIBRARIES)",
+			"-lopencv_core",
+            "-lopencv_imgproc",
+            "-lopencv_imgcodecs",
+            "-lopencv_highgui",
+		],
